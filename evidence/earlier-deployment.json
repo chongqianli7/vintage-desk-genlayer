@@ -1,0 +1,18 @@
+{
+  "chainId": 61999,
+  "sourceSha256": "35811974a7f51ef958baca7b5f44e4b97eb9f3cefc262a886cabba2bb920039f",
+  "address": "0xBC81D7DabB2f7b42c5B42f0c9599902E379162f0",
+  "transactions": {
+    "deployment": {
+      "hash": "0xecc5c1ce715c1f2a8b78d0e7d0865dd567bfd8f0ff457a05451a715d8e608d6e",
+      "status": "FINALIZED",
+      "execution": "SUCCESS"
+    },
+    "open_market": {
+      "hash": "0xead87f8c19090c8e6a09d7f6cf6eb41214e3b6eb7761df334ae3c1cf4fd7ba57",
+      "status": "FINALIZED",
+      "execution": "ERROR"
+    }
+  },
+  "failureCause": "The declared SDK exposes the signed transaction timestamp through message_raw, not the old typed MessageType accessor."
+}
