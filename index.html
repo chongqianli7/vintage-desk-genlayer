@@ -1,0 +1,26 @@
+<!doctype html>
+<html lang="en">
+<script type="module" crossorigin src="./assets/index-BZn54gFH.js"></script>
+<link rel="stylesheet" crossorigin href="./assets/index-D6F1s_Wa.css">
+
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vintage Desk | GDP Forecast Markets</title>
+<header><a class="brand" href="./"><b>V</b> Vintage Desk</a><span class="network">Stable Studionet</span><button id="wallet-open">Connect Wallet</button></header>
+<main>
+<section class="intro">
+<div><p class="eyebrow">U.S. REAL GDP / FORECAST MARKETS</p><h1>Forecast the<br>release.</h1><p>Price three growth ranges. Settle against the publication named in the market terms.</p><a href="#market" class="primary">Explore the market <span aria-hidden="true">↘</span></a></div>
+<aside class="cover"><p class="eyebrow">MARKET COMPOSITION</p><strong>Probability<br>across three bands.</strong><div class="cover-band"><span>LOW</span><span>BASE</span><span>HIGH</span></div><p>100 probability points per forecast</p></aside>
+</section>
+<section id="market" class="workspace">
+<div class="rail"><p class="eyebrow">RELEASE BOOK</p><h2>Markets</h2><div class="examples" id="examples"></div><form id="lookup-form"><label>Market number<input type="number" min="1" name="market" placeholder="Latest market"></label><button>Open market</button></form><button id="create-toggle">List a market</button></div>
+<div class="sheet"><div id="identity">Read-only visitor</div><div id="status" role="status"></div><div id="market-detail" aria-live="polite"></div>
+<section id="creator" hidden><p class="eyebrow">LISTING TERMS</p><h2>List a market</h2><form id="create-form">
+<div class="form-grid"><label>Observation year<input type="number" name="year" min="2020" max="2100" value="2024" required></label><label>Quarter<select name="quarter"><option>1</option><option>2</option><option selected>3</option><option>4</option></select></label><label>Release edition<select name="edition"><option>advance</option><option>second</option><option>third</option></select></label><label>Mode<select name="mode"><option value="replay">Historical replay</option><option value="live">Live forecasting</option></select></label><label>Lower threshold (%)<input name="lower" type="number" step=".01" value="2" required></label><label>Upper threshold (%)<input name="upper" type="number" step=".01" value="3" required></label></div>
+<label>Official BEA release URL<input name="source" type="url" value="https://www.bea.gov/news/2024/gross-domestic-product-third-quarter-2024-advance-estimate" required></label><label>Live close (UTC)<input name="close" type="datetime-local"></label><button class="primary">Sign and list</button> <button id="cancel-create" type="button">Back</button>
+</form></section>
+</div></section>
+</main>
+<footer><span>Vintage Desk</span><span>Forecast points have no cash value.</span></footer>
+<dialog id="wallet"><form method="dialog" class="row"><h2>Wallet</h2><button>Close</button></form><div id="providers"></div><h3>Demo / Test Wallet</h3><p>Keys are held in this page session. Use test GEN only.</p><div id="demo"></div><button id="switch">Switch to Studionet</button> <button id="disconnect">Disconnect</button></dialog>
+</html>
