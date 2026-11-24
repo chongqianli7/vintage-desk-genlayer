@@ -1,10 +1,41 @@
 {
-  "address": "0xE1A8c2a8581610c0Ff2C4C0672f755C327D33558",
+  "address": "0x74311757d8B2F1328f08071242DD2efBf5A440a6",
   "examples": [
     [
       1,
       "2024 Q3 · Release replay",
-      []
+      [
+        [
+          "Market opened",
+          "0x19c2dd71dea9ad7e4b1a90af911cfcd148465689cafc5639613c4fbd275308b5"
+        ],
+        [
+          "Forecast signed",
+          "0xb747297c51d6a59303daf52778ee2de8872ac105ff08c7dcd7ece9dd78988e0e"
+        ],
+        [
+          "Settlement receipt",
+          "0x372b6c2aa8498a39ec44a623c069edfc7c5466a7065fcd66e8839a8bde8cc6c7"
+        ]
+      ]
+    ],
+    [
+      2,
+      "2024 Q2 · Source mismatch",
+      [
+        [
+          "Market opened",
+          "0x729bfa843dc71f3ce2025e4c7cfce7ab27e12457e8dce4ef86e7faf46fd34ade"
+        ],
+        [
+          "Forecast signed",
+          "0x7e0c59cca60769a89e3248870f77355a1c7101e67a439e3a3616c48d7265a2f9"
+        ],
+        [
+          "Verification receipt",
+          "0x2eef728148c9fe3cd4a9b34e09be433b44983a641ccd9e86a0296a5e35e36413"
+        ]
+      ]
     ]
   ]
 }

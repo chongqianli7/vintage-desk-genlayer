@@ -12,11 +12,11 @@ DOMAIN = "https://www.bea.gov/news/"
 
 def observation(path: str, year: int, quarter: int) -> str:
     response = gl.nondet.web.request(DOMAIN + path, method="GET")
-    if response.status_code == 404:
+    if response.status == 404:
         return "NOT_FOUND"
-    if response.status_code != 200:
+    if response.status != 200:
         raise gl.UserError("Source unavailable; retry")
-    raw = response.body.decode("utf-8")
+    raw = (response.body or b"").decode("utf-8")
     statement = re.search(
         r"Real gross domestic product\s*\(GDP\)\s+(increased|decreased)\s+at an annual rate of\s+(\d{1,2}(?:\.\d{1,2})?)\s+percent in the\s+(first|second|third|fourth) quarter of (\d{4})",
         raw, re.IGNORECASE,

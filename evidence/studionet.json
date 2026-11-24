@@ -1,159 +1,105 @@
 {
   "chainId": 61999,
-  "sourceSha256": "026c03fabb9cb939643b67aa83187e392d08748312e632507c4bcb3980e9008c",
+  "sourceSha256": "4c13ada9352d2be3e754bae47e412e23ac3b42264270813c563e9ff3749bc38f",
   "transactions": {
     "deployment": {
-      "hash": "0xdb6ea19f6db8970f0606b5175e63e51e7b22e18fb809fe578d742fa7409d1a4c",
+      "hash": "0x3aa633e758038226ad845f2900e0b79d5aa96839b0a91627d072d79b02b62a44",
       "status": "FINALIZED",
       "execution": "SUCCESS"
-    },
-    "open_normal": {
-      "hash": "0x95613fb7df2fc95410b02d1c4bbbcaed6a16e08c5f1f67fcb1aa718b10edda93",
-      "status": "FINALIZED",
-      "execution": "SUCCESS"
-    },
-    "submit_normal": {
-      "hash": "0xec87ef4d0012eb8e7917c1aab0b5b46791b673d9a355a239944fd8f2c3496d84",
-      "status": "FINALIZED",
-      "execution": "SUCCESS"
-    },
-    "duplicate": {
-      "hash": "0x48f106020d8cefc49f6f2db87d6f04bfa8edce2d12eae9641db94274cf4ffde4",
-      "status": "FINALIZED",
-      "execution": "ERROR"
-    },
-    "unauthorized_freeze": {
-      "hash": "0x0a24f306d856878b6a9e3fb27fcf07579c94b02e150511397d4ed36ec10082c2",
-      "status": "FINALIZED",
-      "execution": "ERROR"
     },
     "release_open": {
-      "hash": "0x174a4e0981aa157421789d9653a11167e0968b496b51146c34c1de476d4a2c01"
-    }
-  },
-  "markets": {},
-  "wallets": [
-    "0xAb11cE8d95Be17c12FF24F8De246960C3CE803F8",
-    "0x60b7EA2e6102E6a0a187af854d9B353187F1154F"
-  ],
-  "schema": {
-    "ctor": {
-      "params": [],
-      "kwparams": {}
+      "hash": "0x19c2dd71dea9ad7e4b1a90af911cfcd148465689cafc5639613c4fbd275308b5",
+      "status": "FINALIZED",
+      "execution": "SUCCESS"
     },
-    "methods": {
-      "count": {
-        "params": [],
-        "kwparams": {},
-        "readonly": true,
-        "ret": "int"
-      },
-      "forecast": {
-        "params": [
-          [
-            "market_id",
-            "int"
-          ],
-          [
-            "low",
-            "int"
-          ],
-          [
-            "middle",
-            "int"
-          ],
-          [
-            "high",
-            "int"
-          ]
-        ],
-        "kwparams": {},
-        "readonly": false,
-        "ret": "any",
-        "payable": false
-      },
-      "freeze": {
-        "params": [
-          [
-            "market_id",
-            "int"
-          ]
-        ],
-        "kwparams": {},
-        "readonly": false,
-        "ret": "any",
-        "payable": false
-      },
-      "get_market": {
-        "params": [
-          [
-            "market_id",
-            "int"
-          ]
-        ],
-        "kwparams": {},
-        "readonly": true,
-        "ret": "dict"
-      },
-      "open_market": {
-        "params": [
-          [
-            "year",
-            "int"
-          ],
-          [
-            "quarter",
-            "int"
-          ],
-          [
-            "edition",
-            "string"
-          ],
-          [
-            "path",
-            "string"
-          ],
-          [
-            "lower",
-            "int"
-          ],
-          [
-            "upper",
-            "int"
-          ],
-          [
-            "close_time",
-            "int"
-          ],
-          [
-            "replay",
-            "bool"
-          ]
-        ],
-        "kwparams": {},
-        "readonly": false,
-        "ret": "any",
-        "payable": false
-      },
-      "settle": {
-        "params": [
-          [
-            "market_id",
-            "int"
-          ]
-        ],
-        "kwparams": {},
-        "readonly": false,
-        "ret": "any",
-        "payable": false
-      }
+    "release_submit": {
+      "hash": "0xb747297c51d6a59303daf52778ee2de8872ac105ff08c7dcd7ece9dd78988e0e",
+      "status": "FINALIZED",
+      "execution": "SUCCESS"
+    },
+    "release_freeze": {
+      "hash": "0xe01840c19de01b5e4ca40aa2badb72653417288e129adff09aceec8555df6534",
+      "status": "FINALIZED",
+      "execution": "SUCCESS"
+    },
+    "release_settle": {
+      "hash": "0x372b6c2aa8498a39ec44a623c069edfc7c5466a7065fcd66e8839a8bde8cc6c7",
+      "status": "FINALIZED",
+      "execution": "SUCCESS"
+    },
+    "mismatch_open": {
+      "hash": "0x729bfa843dc71f3ce2025e4c7cfce7ab27e12457e8dce4ef86e7faf46fd34ade",
+      "status": "FINALIZED",
+      "execution": "SUCCESS"
+    },
+    "mismatch_submit": {
+      "hash": "0x7e0c59cca60769a89e3248870f77355a1c7101e67a439e3a3616c48d7265a2f9",
+      "status": "FINALIZED",
+      "execution": "SUCCESS"
+    },
+    "duplicate_open": {
+      "hash": "0x9af226d0c91e75e449f10bd50c606ee27427668dd431bf8812ed2547db25aa9d",
+      "status": "FINALIZED",
+      "execution": "ERROR"
+    },
+    "unauthorized_freeze_open": {
+      "hash": "0x5dd6ac90417f783a310d6afa1da4704d506b7ab708ac80f824524cab7c42d520",
+      "status": "FINALIZED",
+      "execution": "ERROR"
+    },
+    "mismatch_freeze": {
+      "hash": "0x0a593416d478983e5d820609f052966be82c7335e629186c3e86d0af39fbe9f9",
+      "status": "FINALIZED",
+      "execution": "SUCCESS"
+    },
+    "mismatch_settle": {
+      "hash": "0x2eef728148c9fe3cd4a9b34e09be433b44983a641ccd9e86a0296a5e35e36413",
+      "status": "FINALIZED",
+      "execution": "SUCCESS"
     }
   },
-  "address": "0xE1A8c2a8581610c0Ff2C4C0672f755C327D33558",
-  "replayWallets": [
-    "0xaFA368f67554b50A7690Fd1E04600965B8991685",
-    "0x32225b8f87B08cb2FC328bb821e9a52D2EfCc61b"
+  "markets": {
+    "1": {
+      "attempts": 1,
+      "close_time": 0,
+      "edition": "advance",
+      "entries": "[[\"0x4e022610fec423342a6414fb45ed3b53d2f1c576\", 10, 75, 15, 19050]]",
+      "evidence": "280",
+      "lower": 200,
+      "organizer": "0xac26ed8aedc68f4ddf0846f0f4f75b5868e6058f",
+      "outcome": 1,
+      "path": "2024/gross-domestic-product-third-quarter-2024-advance-estimate",
+      "quarter": 3,
+      "replay": true,
+      "result": 280,
+      "status": "SETTLED",
+      "upper": 300,
+      "year": 2024
+    },
+    "2": {
+      "attempts": 1,
+      "close_time": 0,
+      "edition": "advance",
+      "entries": "[[\"0x4e022610fec423342a6414fb45ed3b53d2f1c576\", 20, 65, 15]]",
+      "evidence": "WRONG_PERIOD",
+      "lower": 200,
+      "organizer": "0xac26ed8aedc68f4ddf0846f0f4f75b5868e6058f",
+      "outcome": 0,
+      "path": "2024/gross-domestic-product-third-quarter-2024-advance-estimate",
+      "quarter": 2,
+      "replay": true,
+      "result": 0,
+      "status": "SOURCE_PENDING",
+      "upper": 300,
+      "year": 2024
+    }
+  },
+  "wallets": [
+    "0xAc26ed8AeDC68f4Ddf0846F0F4F75b5868e6058F",
+    "0x4E022610FeC423342a6414Fb45ed3b53d2f1C576"
   ],
-  "normalId": "2",
-  "mismatchId": "3"
+  "address": "0x74311757d8B2F1328f08071242DD2efBf5A440a6",
+  "normalId": "1",
+  "mismatchId": "2",
+  "deploymentSourceMatches": true
 }

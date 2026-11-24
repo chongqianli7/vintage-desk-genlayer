@@ -48,7 +48,7 @@ class MarketTests(unittest.TestCase):
         self.desk.open_market(2024, 3, "advance", self.release, 200, 300, 0, True)
 
     def offer(self, status, body):
-        sdk.gl.nondet.web.request = lambda *args, **kwargs: SimpleNamespace(status_code=status, body=body.encode())
+        sdk.gl.nondet.web.request = lambda *args, **kwargs: SimpleNamespace(status=status, body=body.encode())
 
     def test_scores_and_replays(self):
         self.desk.forecast(1, 10, 75, 15)

@@ -1,8 +1,8 @@
 # Vintage Desk
 
-[Open Vintage Desk](https://chongqianli7.github.io/vintage-desk-genlayer/)
+[Open Vintage Desk](https://chongqianli7.github.io/vintage-desk-genlayer/) · [Studionet contract](https://explorer-studio.genlayer.com/address/0x74311757d8B2F1328f08071242DD2efBf5A440a6)
 
-Vintage Desk is a probability forecast market for the headline U.S. real GDP growth figure. A market organizer fixes the observation quarter, release edition, official BEA page, close time, and two thresholds. Forecasters allocate 100 probability points among three exhaustive bands. Every validator reads the pinned publication independently. A matching numeric observation settles the market and writes ordered forecast scores.
+Vintage Desk is a probability forecast market for the headline U.S. real GDP growth figure. A market organizer fixes the observation quarter, release edition, official BEA page, close time, and two thresholds. Forecasters allocate 100 probability points among three exhaustive bands. Every validator reads the pinned publication independently. A matching numeric observation settles the market and writes per-wallet forecast scores.
 
 ## Rules
 

@@ -4,71 +4,112 @@ import assert from 'node:assert/strict';
 import {createAccount,createClient} from 'genlayer-js';
 import {chain,reader,read,fund,wait,execution,succeeded} from '../src/chain.js';
 
-const source=fs.readFileSync('contracts/vintage_desk.py','utf8');
-const evidence={chainId:chain.id, sourceSha256:createHash('sha256').update(source).digest('hex'), transactions:{}, markets:{}};
-const save=()=>fs.writeFileSync('evidence/studionet.json',JSON.stringify(evidence,(_,v)=>typeof v==='bigint'?String(v):v,2)+'\n');
+const file='evidence/studionet.json';
+const source=fs.readFileSync('contracts/vintage_desk.py');
+const evidence={chainId:chain.id,sourceSha256:createHash('sha256').update(source).digest('hex'),transactions:{},markets:{}};
+let address;
+const save=()=>fs.writeFileSync(file,JSON.stringify(evidence,(_,v)=>typeof v==='bigint'?String(v):v,2)+'\n');
+const nap=ms=>new Promise(r=>setTimeout(r,ms));
+async function retry(task,allowed=()=>true){
+  for(let i=0;;i++){
+    try{return await task();}catch(e){if(i===5||!allowed(e))throw e; await nap(1800*(i+1));}
+  }
+}
 const accounts=[createAccount(),createAccount()];
 const [host,trader]=accounts.map(account=>createClient({chain,account}));
 evidence.wallets=accounts.map(a=>a.address);
 const final=[];
-async function record(label,promise,expected=true){
-  const hash=await promise;
+const nativeFetch=globalThis.fetch;
+globalThis.fetch=async (url,options)=>{
+  let method;
+  try{method=JSON.parse(options?.body??'{}').method;}catch{}
+  if(!method||!(/^(eth_get|eth_gasPrice|eth_estimateGas|gen_get|gen_call|sim_get)/.test(method)))return nativeFetch(url,options);
+  return retry(async()=>{
+    const response=await nativeFetch(url,options);
+    if(response.status>=500||!response.headers.get('content-type')?.includes('json'))throw Error('Transient RPC response: '+method);
+    return response;
+  });
+};
+const record=(label,client,functionName,args)=>retry(async()=>{
+  const hash=await client.writeContract({address,functionName,args,value:0n,fees});
   evidence.transactions[label]={hash};
   save();
   console.log(label,hash);
-  final.push(wait(hash).then(tx=>{
+  return hash;
+},e=>/eth_gasPrice|eth_getTransactionCount|eth_estimateGas/i.test(e.message));
+async function step(label,client,functionName,args,expected=true){
+  const hash=await record(label,client,functionName,args);
+  final.push(retry(()=>wait(hash)).then(tx=>{
     evidence.transactions[label]={hash,status:tx.statusName,execution:execution(tx)};
-    save();
-    console.log(label,tx.statusName,execution(tx));
+    save(); console.log(label,tx.statusName,execution(tx));
     return succeeded(tx)===expected;
   }).catch(e=>{console.error(label,e.message);return false;}));
-  const tx=await reader.waitForTransactionReceipt({hash,waitUntil:'decided',interval:2000,retries:120,fullTransaction:true});
-  assert.equal(succeeded(tx),expected,label);
-  return tx;
+  const tx=await retry(()=>reader.waitForTransactionReceipt({hash,waitUntil:'decided',interval:2000,retries:60,fullTransaction:true}));
+  if(succeeded(tx)!==expected){
+    const receipts=tx.consensus_data?.leader_receipt;
+    const leader=Array.isArray(receipts)?receipts.find(r=>r.mode==='leader'):receipts;
+    console.error(leader?.genvm_result?.stderr??leader?.result);
+    throw Error(label+' execution failed');
+  }
 }
+let fees;
 try{
-  evidence.schema=await reader.getContractSchemaForCode(source);
-  save();
-  await Promise.all(accounts.map(a=>fund(a.address)));
-  const fees=await reader.estimateTransactionFees();
+  await Promise.all(accounts.map(a=>retry(()=>fund(a.address))));
+  fees=await retry(()=>reader.estimateTransactionFees());
   for(const a of accounts){
     for(let n=0;n<20;n++){
-      if(await reader.getBalance({address:a.address})>fees.feeValue)break;
+      if(await retry(()=>reader.getBalance({address:a.address}))>fees.feeValue)break;
       if(n===19)throw Error('Faucet funds unavailable');
-      await new Promise(r=>setTimeout(r,1600));
+      await nap(2000);
     }
   }
-  const deployment=await record('deployment',host.deployContract({code:source,args:[],fees}));
-  const address=deployment.data?.contract_address??deployment.to_address;
+  const deployHash=await host.deployContract({code:source.toString('utf8'),args:[],fees});
+  evidence.transactions.deployment={hash:deployHash};
+  save();
+  console.log('deployment',deployHash);
+  final.push(retry(()=>wait(deployHash)).then(tx=>{
+    evidence.transactions.deployment={hash:deployHash,status:tx.statusName,execution:execution(tx)};
+    save();
+    return succeeded(tx);
+  }));
+  const deploy=await retry(()=>reader.waitForTransactionReceipt({hash:deployHash,waitUntil:'decided',interval:2000,retries:60,fullTransaction:true}));
+  assert(succeeded(deploy));
+  address=deploy.data.contract_address;
   evidence.address=address;
   save();
-  const write=(client,functionName,args)=>client.writeContract({address,functionName,args,value:0n,fees});
-  const path='2024/gross-domestic-product-third-quarter-2024-advance-estimate';
-  await record('open_normal',write(host,'open_market',[2024n,3n,'advance',path,200n,300n,0n,true]));
-  await record('submit_normal',write(trader,'forecast',[1n,10n,75n,15n]));
-  await record('duplicate',write(trader,'forecast',[1n,10n,75n,15n]),false);
-  await record('unauthorized_freeze',write(trader,'freeze',[1n]),false);
-  await record('freeze_normal',write(host,'freeze',[1n]));
-  await record('settle_normal',write(trader,'settle',[1n]));
-  await record('open_mismatch',write(host,'open_market',[2024n,2n,'advance',path,200n,300n,0n,true]));
-  await record('submit_mismatch',write(trader,'forecast',[2n,20n,65n,15n]));
-  await record('freeze_mismatch',write(host,'freeze',[2n]));
-  await record('settle_mismatch',write(trader,'settle',[2n]));
-  assert((await Promise.all(final)).every(Boolean));
-  for(const id of [1n,2n])evidence.markets[id]=await read(address,'get_market',[id]);
+  const head=0n;
+  evidence.normalId=String(head+1n);
+  evidence.mismatchId=String(head+2n);
   save();
-  assert.equal(evidence.markets[1].status,'SETTLED');
-  assert.equal(Number(evidence.markets[1].result),280);
-  assert.equal(JSON.parse(evidence.markets[1].entries)[0][4],19050);
-  assert.equal(evidence.markets[2].status,'SOURCE_PENDING');
-  assert.equal(evidence.markets[2].evidence,'WRONG_PERIOD');
-  assert.equal(JSON.parse(evidence.markets[2].entries)[0].length,4);
+  const path='2024/gross-domestic-product-third-quarter-2024-advance-estimate';
+  for(const [label,id,quarter,forecast] of [
+    ['release',head+1n,3n,[10n,75n,15n]],['mismatch',head+2n,2n,[20n,65n,15n]]
+  ]){
+    await step(label+'_open',host,'open_market',[2024n,quarter,'advance',path,200n,300n,0n,true]);
+    await step(label+'_submit',trader,'forecast',[id,...forecast]);
+    if(label==='mismatch'){
+      await step('duplicate_open',trader,'forecast',[id,...forecast],false);
+      await step('unauthorized_freeze_open',trader,'freeze',[id],false);
+    }
+    await step(label+'_freeze',host,'freeze',[id]);
+    await step(label+'_settle',trader,'settle',[id]);
+  }
+  assert((await Promise.all(final)).every(Boolean));
+  for(const id of [evidence.normalId,evidence.mismatchId])evidence.markets[id]=await retry(()=>read(address,'get_market',[BigInt(id)]));
+  save();
+  const normal=evidence.markets[evidence.normalId];
+  const mismatch=evidence.markets[evidence.mismatchId];
+  assert.equal(normal.status,'SETTLED');
+  assert.equal(Number(normal.result),280);
+  assert.equal(JSON.parse(normal.entries)[0][4],19050);
+  assert.equal(mismatch.status,'SOURCE_PENDING');
+  assert.equal(mismatch.evidence,'WRONG_PERIOD');
+  assert.equal(JSON.parse(mismatch.entries)[0].length,4);
+  const deployment=await retry(()=>reader.getTransaction({hash:evidence.transactions.deployment.hash}));
   const bytes=deployment.data.contract_code;
-  assert([Buffer.from(bytes,'base64'),Buffer.from(bytes),Buffer.from(bytes.replace(/^0x/,''),'hex')].some(b=>b.equals(Buffer.from(source))));
+  assert([Buffer.from(bytes,'base64'),Buffer.from(bytes),Buffer.from(bytes.replace(/^0x/,''),'hex')].some(b=>b.equals(source)));
   evidence.deploymentSourceMatches=true;
   save();
 }catch(e){
-  console.error(e.message);
-  process.exitCode=1;
-  await Promise.allSettled(final);
+  console.error(e.message);process.exitCode=1;await Promise.allSettled(final);
 }
